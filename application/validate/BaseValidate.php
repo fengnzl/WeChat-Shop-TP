@@ -54,9 +54,9 @@ class BaseValidate extends Validate
 
     protected function isNotEmpty($value , $rule='' ,$data='' ,$field='' ){
     if(empty($value)){
-        return true;
-    }else{
         return false;
+    }else{
+        return true;
     }
 }
 }

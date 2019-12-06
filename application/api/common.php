@@ -14,9 +14,9 @@ function curl_get($url,&$http_code=0){
     //不做证书校验,部署在linux环境下请改为true
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
     //设置连接的等待的超时时间
-    curl_setopt($ch,CURLOPT_CONNECTTIMEOUT，10);
+    curl_setopt($ch,CURLOPT_CONNECTTIMEOUT,10);
     //设置数据传输的超时时间
-//    curl_setopt($ch,CURLOPT_TIMEOUT,500);
+    curl_setopt($ch,CURLOPT_TIMEOUT,500);
     //发起请求
     $file_contents = curl_exec($ch);
     //获取连接资源的最后一个http代码
@@ -25,4 +25,20 @@ function curl_get($url,&$http_code=0){
     curl_close($ch);
     //返回获取的资源数据
     return $file_contents;
+}
+
+/**
+ * 获得随机字符串
+ * @param $length
+ * @return null|string
+ */
+function getRandomChars($length){
+    $str = null;
+    $strPol = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz";
+    $max = strlen($strPol);
+    for($i=0;$i<$length;$i++){
+        $str .= $strPol[rand(0,$max)];
+    }
+
+    return $str;
 }
