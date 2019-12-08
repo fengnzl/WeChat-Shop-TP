@@ -39,7 +39,7 @@ class UserToken extends Token
                 $this->processLoginError($wxResult);
             }else{
                 // 调用授权接口
-                 $this->grantToken($wxResult);
+                 return $this->grantToken($wxResult);
 
             }
         }

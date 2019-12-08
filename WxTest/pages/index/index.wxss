@@ -1,0 +1,7 @@
+/**index.wxss**/
+button {
+  display: block;
+  width: 700rpx !important;
+  margin-bottom: 20rpx;
+    background-color: lightblue;
+}
