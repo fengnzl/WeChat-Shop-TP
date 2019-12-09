@@ -13,6 +13,14 @@ class Product extends BaseModel
 {
     protected $hidden = ['create_time','update_time','pivot','category_id','img_id','delete_time','from'];
 
+    public function imgs(){
+        return $this->hasMany('ProductImage','product_id','id');
+    }
+
+    public function properties(){
+        return $this->hasMany('ProductProperty', 'product_id', 'id');
+    }
+
     public function getMainImgUrlAttr($value, $data){
         return $this->prefixImgUrl($value, $data);
     }
@@ -26,5 +34,15 @@ class Product extends BaseModel
 
     public static function getProductsByCategoryID($categoryID){
         return self::where('category_id','=',$categoryID)->select();
+    }
+
+
+    public static function getProductDetail($id){
+        $product = self::with(['imgs' => function($query){
+            $query->with(['imgUrl'])
+                ->order('order','asc');
+        }])->with(['properties'])
+            ->find($id);
+        return $product;
     }
 }
