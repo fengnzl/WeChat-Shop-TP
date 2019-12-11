@@ -16,6 +16,10 @@ use think\Controller;
 use app\api\model\Product as ProductModel;
 class Product extends Controller
 {
+    /**
+     * 获取最新的商品信息（默认15条）
+     * @url /product/recent
+     */
     public function getRecent($count=15){
         (new Count())->goCheck();
         $products = ProductModel::getMostRecent($count);
@@ -26,6 +30,10 @@ class Product extends Controller
         return json($products);
     }
 
+    /**
+     * 获取指定类目下的所有商品
+     * @url /product/by_category
+     */
     public function getAllInCategory($id){
         (new IDMustBePositiveInt())->goCheck();
         $products = ProductModel::getProductsByCategoryID($id);
@@ -36,6 +44,10 @@ class Product extends Controller
         return json($products);
     }
 
+    /**
+     * 获取指定的商品信息
+     * @url /product/:id
+     */
     public function getOne($id){
         (new IDMustBePositiveInt())->goCheck();
         $product = ProductModel::getProductDetail($id);
@@ -43,5 +55,12 @@ class Product extends Controller
             throw new ProductMissException();
         }
         return json($product);
+    }
+
+    /**
+     * 删除一个商品
+     */
+    public function deleteOne(){
+
     }
 }

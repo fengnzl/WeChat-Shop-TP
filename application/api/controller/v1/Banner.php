@@ -26,7 +26,6 @@ class Banner extends Controller
     {
         (new IDMustBePositiveInt())->goCheck();
         $banner = BannerModel::getBannerByID($id);
-//        $banner = BannerModel::get($id);
         if(!$banner){
 
             throw new BannerMissException('参数错误');

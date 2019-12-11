@@ -15,6 +15,10 @@ use app\api\model\Category as CategoryModel;
 
 class Category extends Controller
 {
+    /**
+     * 获取所有类目
+     * @url /category/all
+     */
     public function getAllCategories(){
         $categories = CategoryModel::all([], 'img');
         if($categories->isEmpty()){

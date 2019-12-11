@@ -22,7 +22,6 @@
 
 use think\Route;
 Route::get('banner/:id','api/v1.Banner/getBanner');
-Route::post('hello','sample/Test/hello');
 Route::get('api/:version/theme','api/:version.Theme/getSimpleList');
 Route::get('api/:version/theme/:id','api/:version.Theme/getComplexOne');
 
@@ -40,3 +39,5 @@ Route::get('api/:version/product/recent','api/:version.Product/getRecent');
 //});
 
 Route::post('api/:version/address','api/:version.Address/createOrUpdateAddress');
+
+Route::post('api/:version/order','api/:version.Order/placeOrder');

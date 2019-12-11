@@ -10,7 +10,7 @@ Page({
   getToken(){
     wx.login({
       success(res) {
-        console.log(res.code);
+        // console.log(res.code);
         // return
         if (res.code) {
           //发起网络请求

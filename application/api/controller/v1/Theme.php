@@ -31,6 +31,10 @@ class Theme extends Controller
         return json($result);
     }
 
+    /**
+     * 获取指定主题下的相关信息
+     * @url theme/:id
+     */
     public function getComplexOne($id){
         (new IDMustBePositiveInt())->goCheck();
         $result = ThemeModel::getThemeWithProducts($id);

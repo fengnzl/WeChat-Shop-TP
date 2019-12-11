@@ -9,6 +9,7 @@
 namespace app\api\service;
 
 
+use app\lib\enum\ScopeEnum;
 use app\lib\exception\TokenException;
 use think\Cache;
 use think\Exception;
@@ -50,5 +51,14 @@ class Token
     public static function getCurrentUid(){
         $uid = self::getCurrentTokenVar('uid');
         return $uid;
+    }
+
+    public static function checkExclusionScope(){
+        $scope = self::getCurrentTokenVar('scope');
+        if($scope==ScopeEnum::User){
+            return true;
+        }else{
+            throw new ForbiddenException();
+        }
     }
 }

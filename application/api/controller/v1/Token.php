@@ -14,6 +14,10 @@ use app\validate\TokenGet;
 
 class Token
 {
+    /**
+     * 获取用户令牌信息
+     * @url /Token/user
+     */
     public function getToken($code = ''){
         (new TokenGet())->goCheck();
         $ut = new UserToken($code);
