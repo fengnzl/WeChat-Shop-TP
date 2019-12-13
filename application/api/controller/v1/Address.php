@@ -9,34 +9,18 @@
 namespace app\api\controller\v1;
 
 
-use app\lib\enum\ScopeEnum;
-use app\lib\exception\ForbiddenException;
+use app\api\model\User as UserModel;
+use app\api\service\Token as TokenService;
 use app\lib\exception\SuccessMessage;
-use app\lib\exception\TokenException;
 use app\lib\exception\UserException;
 use app\validate\AddressNew;
-use app\api\service\Token as TokenService;
-use app\api\model\User as UserModel;
-use think\Controller;
 
-class Address extends Controller
+class Address extends BaseController
 {
     //前置方法
     protected $beforeActionList = [
         'checkPrimaryScope'=>['only' => 'createOrUpdateAddress'],
     ];
-
-    /**
-     * 检测初级权限
-     */
-    protected function checkPrimaryScope(){
-        $scope = TokenService::getCurrentTokenVar('scope');
-        if($scope>=ScopeEnum::User){
-            return true;
-        }else{
-            throw new ForbiddenException();
-        }
-    }
 
     /**
      * 根据token新增或者修改用户地址
