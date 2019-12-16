@@ -67,5 +67,40 @@ Page({
         this.getToken()//重新登录
       }
     })
+  },
+
+  // 支付 务必在点击支付前，先点击申请令牌，确保令牌申请成功
+  pay(){
+    var token = wx.getStorageSync('token');
+    var that = this;
+    wx.request({
+      url: baseUrl +'/order?XDEBUG_SESSION_START=19877',
+      header: {
+        token: token
+      },
+      data: {
+        products:[
+          {
+            product_id:1, count:2
+          },
+          {
+            product_id: 2, count: 3
+          }
+        ]
+      },
+      method: 'POST',
+      success(res){
+        console.log(res.data)
+        if(res.data.pass){
+          wx.setStorageSync('order_id', res.data.order_id);
+
+        }else{
+          console.log('创建订单失败');
+        }
+      },
+      fail(res){
+        console.log(res.data);
+      }
+    })
   }
 })

@@ -18,7 +18,7 @@ class OrderPlace extends BaseValidate
     ];
 
     protected function checkProducts($values){
-        if(empty($vallus)){
+        if(empty($values)){
             throw new ParameterException([
                 'msg' => '商品列表不能为空'
             ]);

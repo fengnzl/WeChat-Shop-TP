@@ -5,3 +5,6 @@ button {
   margin-bottom: 20rpx;
     background-color: lightblue;
 }
+.pay{
+  background-color: coral;
+}

@@ -2,3 +2,4 @@
 <button bindtap="getToken" class="btn-token" >申请令牌</button>
 <button bindtap="getSuperToken" class="btn-super">申请super权限令牌</button>
 <button bindtap="checkSession" class="check-session">判断登陆状态是否失效</button>
+<button bindtap="pay" class="pay">支付</button>

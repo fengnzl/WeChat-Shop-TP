@@ -45,7 +45,7 @@ class BaseValidate extends Validate
      */
     //                           校验字段的值  校验规则  传递的数据   校验的字段
     protected function IsPositiveInt($value , $rule='' ,$data='' ,$field='' ){
-        if(is_numeric($value) && intval($value).'' === $value&&($value + 0)>0){
+        if(is_numeric($value) && is_int($value + 0) &&($value + 0)>0){
             return true;
         }else{
             return $field.'必须是正整数';
