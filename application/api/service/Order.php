@@ -13,6 +13,7 @@ use app\api\model\Product;
 use app\api\model\UserAddress;
 use app\lib\exception\OrderException;
 use app\lib\exception\UserException;
+use think\Db;
 use think\Exception;
 
 
@@ -52,6 +53,8 @@ class Order
 
     // 生成订单
     private function createOrder($snap){
+        // 开启事务
+        Db::startTrans();
         try{
             $orderNo = self::makeOrderNo();
             $order = new \app\api\model\Order();
@@ -63,7 +66,6 @@ class Order
             $order->snap_name = $snap['snapName'];
             $order->snap_address = $snap['snapAddress'];
             $order->snap_items = json_encode($snap['pStatus']);
-
             $order->save();
             // 订单主键
             $orderID = $order->id;
@@ -77,16 +79,18 @@ class Order
             $orderProduct = new OrderProduct();
             $orderProduct->saveAll($this->oProducts);
 
+            // 事务提交
+            Db::commit();
             return [
                 'order_no' => $orderNo,
                 'order_id' => $orderID,
                 'create_time' => $create_time
             ];
         }catch (Exception $ex){
+            // 事务回滚
+            Db::rollback();
             throw $ex;
         }
-
-
     }
     // 生成唯一订单号  这里使用public static 是方便外部调用
     public static function makeOrderNo(){
@@ -131,6 +135,19 @@ class Order
                 'errorCode' => 60001
             ]);
         }
+        return $userAddress;
+    }
+
+    // 对外公开库存量检测方法
+    public function checkOrderStock($orderID)
+    {
+        // 根据订单号获取下单相关信息  product_id ,count
+        $oProducts = OrderProduct::where('order_id','=',$orderID)->select();
+        $this->oProducts = $oProducts;
+        // 根据下单相关信息获取库存信息
+        $this->products = $this->getProductsByOrder($oProducts);
+        $status = $this->getOrderStatus();
+        return $status;
     }
     /**
      * 获取订单状态，获取到详细的订单信息方便检验商品库存量
@@ -163,7 +180,7 @@ class Order
         $pStatus = [
             'id' => null, // 商品id
             'haveStock' => false, // 是否有库存
-            'count' => 0, // 数量
+            'count' => 0, // 订单数量
             'name' => '', // 名称
             'totalPrice' => 0 // 当前商品订单总价格
         ];

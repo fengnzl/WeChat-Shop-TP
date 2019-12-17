@@ -81,7 +81,7 @@ Page({
       data: {
         products:[
           {
-            product_id:1, count:2
+            product_id:1, count:10
           },
           {
             product_id: 2, count: 3
