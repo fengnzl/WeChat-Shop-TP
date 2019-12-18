@@ -18,6 +18,20 @@ use think\Request;
 
 class Token
 {
+    // 检测当前操作是否合法，如订单号的用户id和当前令牌里的uid是否相等
+    public static function isValidOperate($checkUID)
+    {
+        if(!$checkUID){
+            throw new Exception('检查UID时必须传入一个被检查的UID');
+        }
+        $uid = self::getCurrentUid();
+        if($uid == $checkUID){
+            return true;
+        }
+        return false;
+    }
+
+    // 生成Token令牌
     public static function generateToken(){
         // 选取32个字符组成一组随机字符串
         $randomChars = getRandomChars(32);
