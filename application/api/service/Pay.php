@@ -19,7 +19,7 @@ use think\Loader;
 use think\Log;
 
 // extend/WxPay/WxPay.WxPay.Api.php
-Loader::import('WxPay.WxPay',EXTEND_PATH,'Api.php');
+Loader::import('WxPay.WxPay',EXTEND_PATH,'.Api.php');
 
 require_once(EXTEND_PATH.'WxPay'.DS.'WxPay.Config.php');
 
@@ -52,6 +52,7 @@ class Pay
         if(!$status['pass']){
             return $status;
         }
+        return $this->makeWxPreOrder($status['orderPrice']);
     }
 
     // 微信预下单
@@ -74,10 +75,12 @@ class Pay
         // 设置用户身份标识
         $wxOrderData->SetOpenid($openid);
         // 设置回调地址 这里需要编写方法来接受小程序返回的回调地址
-        $wxOrderData->SetNotify_url("");
+//        $wxOrderData->SetNotify_url("");
+        $wxOrderData->SetNotify_url("https://www.baidu.com");
+        return $this->getPaySignature($wxOrderData);
 
     }
-
+    // 获取签名
     private function getPaySignature($wxOrderData){
         $config = new \WxPayConfig();
         // 向微信统一下单
@@ -89,8 +92,40 @@ class Pay
             Log::record($wxOrder, 'error');
             Log::record('获取预支付订单失败','error');
         }
+        $this->recordPrepayID($wxOrder);
+        $signature = $this->sign($wxOrder);
+        return $signature;
     }
 
+    // 生成支付数据的签名及相关支付参数
+    private function sign($wxOrder){
+        $jsApiPayData = new \WxPayJsApiPay();
+        // 相关参数文档 https://pay.weixin.qq.com/wiki/doc/api/wxa/wxa_api.php?chapter=7_7&index=3
+        $jsApiPayData->SetAppid(config('ex.app_id'));
+        $jsApiPayData->SetTimeStamp(string(time()));
+        // 生成随机串
+        $rand = md5(time().mt_rand(0,1000));
+        $jsApiPayData->SetTimeStamp($rand);
+
+        $jsApiPayData->SetPackage('prepay_id='.$wxOrder['prepay_id']);
+        $jsApiPayData->SetSignType('MD5');
+        // 微信封装的生成sign方法
+        $sign = $jsApiPayData->MakeSign();
+        // 获取参数数组
+        $rawValues = $jsApiPayData->GetValues();
+        // 将生成的签名添加到数组中
+        $rawValues['paySign'] = $sign;
+        // 因为数组中还携带appid 而客户端并不用appid这个参数
+        // 而且有些时候我们也不希望返回这个参数，因袭我们将其删除
+        unset($rawValues['appId']);
+        return $rawValues;
+
+    }
+    // 保存prepay_id
+    private function recordPrepayID($wxOrder){
+        OrderModel::where('id','=',$this->orderID)
+            ->update(['prepay_id'=>$wxOrder['prepay_id']]);
+    }
     // 检测订单是否符合业务逻辑
     private function checkOrderValidate(){
         // 查询当前订单号的相关信息

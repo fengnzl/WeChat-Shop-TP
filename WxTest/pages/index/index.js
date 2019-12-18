@@ -74,7 +74,7 @@ Page({
     var token = wx.getStorageSync('token');
     var that = this;
     wx.request({
-      url: baseUrl +'/order?XDEBUG_SESSION_START=19877',
+      url: baseUrl +'/order',
       header: {
         token: token
       },
@@ -93,6 +93,7 @@ Page({
         console.log(res.data)
         if(res.data.pass){
           wx.setStorageSync('order_id', res.data.order_id);
+          that.getPreOrder(token,res.data.order_id);
 
         }else{
           console.log('创建订单失败');
@@ -102,5 +103,36 @@ Page({
         console.log(res.data);
       }
     })
+  },
+  getPreOrder(token, orderID){
+    if(token){
+      wx.request({
+        url: baseUrl +'/pay/pre_order?XDEBUG_SESSION_START=19809',
+        method: 'POST',
+        header:{
+          token:token
+        },
+        data:{
+          id: orderID
+        },
+        success(res){
+          var preData = res.data;
+          console.log(preData);
+          // wx.requestPayment({
+          //   timeStamp: preData.timeStamp.toString(),
+          //   nonceStr: preData.conceStr,
+          //   package: preData.package,
+          //   signType: preData.signType,
+          //   paySign: preData.paySign,
+          //   success(res){
+          //     console.log(res.data);
+          //   },
+          //   fail(error){
+          //     console.log(error);
+          //   }
+          // })
+        }
+      })
+    }
   }
 })

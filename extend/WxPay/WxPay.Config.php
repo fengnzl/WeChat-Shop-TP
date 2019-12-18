@@ -8,7 +8,8 @@
 /**
  * 	配置账号信息
  */
-
+require_once 'WxPay.Config.Interface.php';
+require_once  "Config.php";
 class WxPayConfig extends WxPayConfigInterface{
     //=======【基本信息设置】=====================================
     /**
