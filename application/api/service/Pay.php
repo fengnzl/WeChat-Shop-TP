@@ -101,7 +101,7 @@ class Pay
     private function sign($wxOrder){
         $jsApiPayData = new \WxPayJsApiPay();
         // 相关参数文档 https://pay.weixin.qq.com/wiki/doc/api/wxa/wxa_api.php?chapter=7_7&index=3
-        $jsApiPayData->SetAppid(config('ex.app_id'));
+        $jsApiPayData->SetAppid(config('wx.app_id'));
         $jsApiPayData->SetTimeStamp(string(time()));
         // 生成随机串
         $rand = md5(time().mt_rand(0,1000));
