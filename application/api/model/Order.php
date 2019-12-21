@@ -17,4 +17,27 @@ class Order extends BaseModel
 
     // 指定创建时间
 //    protected $createTime = 'createtime';
+
+    public function getSnapItemsAttr($value)
+    {
+        if(empty($value)){
+            return null;
+        }
+        return json_decode($value);
+    }
+    public function getSnapAddressAttr($value)
+    {
+        if(empty($value)){
+            return null;
+        }
+        return json_decode($value);
+    }
+
+    public static function getSummaryByuser($uid, $page, $size)
+    {
+        $pageData = self::where('user_id','=',$uid)
+            ->order('create_time desc')
+            ->paginate($size, true, ['page'=>$page]);
+        return $pageData;
+    }
 }

@@ -75,8 +75,7 @@ class Pay
         // 设置用户身份标识
         $wxOrderData->SetOpenid($openid);
         // 设置回调地址 这里需要编写方法来接受小程序返回的回调地址
-//        $wxOrderData->SetNotify_url("");
-        $wxOrderData->SetNotify_url("https://www.baidu.com");
+        $wxOrderData->SetNotify_url(config('secure.pay_back_url'));
         return $this->getPaySignature($wxOrderData);
 
     }
@@ -91,6 +90,7 @@ class Pay
         {// 记录日志
             Log::record($wxOrder, 'error');
             Log::record('获取预支付订单失败','error');
+            throw new Exception('获取预支付订单失败，'.$wxOrder['err_code_des']);
         }
         $this->recordPrepayID($wxOrder);
         $signature = $this->sign($wxOrder);

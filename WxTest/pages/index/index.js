@@ -81,10 +81,10 @@ Page({
       data: {
         products:[
           {
-            product_id:1, count:10
+            product_id:1, count:1
           },
           {
-            product_id: 2, count: 3
+            product_id: 2, count: 1
           }
         ]
       },
@@ -107,7 +107,7 @@ Page({
   getPreOrder(token, orderID){
     if(token){
       wx.request({
-        url: baseUrl +'/pay/pre_order?XDEBUG_SESSION_START=19809',
+        url: baseUrl +'/pay/pre_order',
         method: 'POST',
         header:{
           token:token
